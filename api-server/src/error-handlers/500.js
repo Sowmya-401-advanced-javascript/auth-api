@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 /*
   In this example, we directly export an anonymous function

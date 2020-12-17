@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 /*
   In this example, we first declare a funcion and then explicitly export it

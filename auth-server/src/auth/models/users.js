@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const SECRET = 'secretstuff';
+
 const users = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, required: true, default: 'user', enum: ['user', 'editor', 'admin'] },
-});
+  role: { type: String, required: true, default: 'user', enum: ['user', 'writer', 'editor', 'admin'] }
+}, { toJSON: { virtuals: true }});
 // }, { toObject: { getters: true } }); // What would this do if we use this instead of just });
 
 // Adds a virtual field to the schema. We can see it, but it never persists
@@ -17,12 +19,13 @@ users.virtual('token').get(function () {
   let tokenObject = {
     username: this.username,
   }
-  return jwt.sign(tokenObject, process.env.SECRET)
+  return jwt.sign(tokenObject, SECRET)
 });
 
 users.virtual('capabilities').get(function () {
   let acl = {
     user: ['read'],
+    writer: ['read', 'create'],
     editor: ['read', 'create', 'update'],
     admin: ['read', 'create', 'update', 'delete']
   };
@@ -46,7 +49,7 @@ users.statics.authenticateBasic = async function (username, password) {
 // BEARER AUTH
 users.statics.authenticateWithToken = async function (token) {
   try {
-    const parsedToken = jwt.verify(token, process.env.SECRET);
+    const parsedToken = jwt.verify(token, SECRET);
     const user = this.findOne({ username: parsedToken.username })
     if (user) { return user; }
     throw new Error("User Not Found");
