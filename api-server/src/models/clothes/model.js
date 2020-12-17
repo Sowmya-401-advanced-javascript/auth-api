@@ -1,6 +1,6 @@
-'use strict';
+// 'use strict';
 
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 const clothesSchema = mongoose.Schema({
   name: { type: String, required: true },

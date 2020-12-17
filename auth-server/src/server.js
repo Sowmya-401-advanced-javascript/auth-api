@@ -10,6 +10,12 @@ const errorHandler = require('./error-handlers/500.js');
 const notFound = require('./error-handlers/404.js');
 const authRoutes = require('./auth/routes.js');
 
+// const logger = require('./middleware/logger.js'); //doubt 
+
+// app.use(logger); //doubt
+
+
+
 // Prepare the express app
 const app = express();
 
@@ -24,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authRoutes);
 
 // Catchalls
-app.use(notFound);
+app.use('*', notFound);
 app.use(errorHandler);
 
 module.exports = {
